@@ -5,17 +5,16 @@ pipeline {
         ENV = "${env.BRANCH_NAME}"
         TF_WORKDIR = "environments/${env.BRANCH_NAME}"
     }
-}
 
     stages {
         stage('Checkout') {
             steps {
-                git branch: "${env.BRANCH_NAME}", url:"https://github.com/praveenkavedi/Terraform-pipeline-project.git"
+                git branch: "${env.BRANCH_NAME}", url: "https://github.com/praveenkavedi/Terraform-pipeline-project.git"
             }
         }
-    }
+
         stage('Terraform Init') {
-            steps{
+            steps {
                 dir("${TF_WORKDIR}") {
                     sh 'terraform init'
                 }
@@ -23,7 +22,7 @@ pipeline {
         }
 
         stage('Terraform Plan') {
-            steps{
+            steps {
                 dir("${TF_WORKDIR}") {
                     sh 'terraform plan -out=tfplan'
                     sh 'terraform show -no-color tfplan > tfplan.txt'
@@ -32,20 +31,18 @@ pipeline {
             }
         }
 
-        stage('Approval'){
-           /* when {
-                expression {
-                    env.BRANCH_NAME == 'prod'
-                }
-                } */
-                steps {
-                    input message: 'Approve deployment to production?', ok: 'Deploy'
-                }
-        }
-        
-        stage('Terraform Apply'){
-            steps{
-                dir("${TF_WOKDIR}")
-                sh "terraform apply tfplan"
+        stage('Approval') {
+            steps {
+                input message: 'Approve deployment to production?', ok: 'Deploy'
             }
         }
+
+        stage('Terraform Apply') {
+            steps {
+                dir("${TF_WORKDIR}") {
+                    sh "terraform apply tfplan"
+                }
+            }
+        }
+    }
+}
