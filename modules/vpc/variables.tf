@@ -1,6 +1,6 @@
 variable "vpc_cidr" {
     description = "CIDR block for the VPC"
-    type        = number
+    type        = string
   
 }
 
@@ -11,7 +11,7 @@ variable "env" {
 
 variable "subnet_cidr" {
     description = "CIDR block for the subnet"
-    type        = number
+    type        = string
 }
 
 variable "az" {
